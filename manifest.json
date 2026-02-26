@@ -1,0 +1,27 @@
+{
+  "name": "BulaFácil",
+  "short_name": "BulaFácil",
+  "description": "Verificador de medicamentos e interações medicamentosas.",
+  "start_url": "/bula/index.html",
+  "scope": "/bula/",
+  "display": "standalone",
+  "background_color": "#f5f2ee",
+  "theme_color": "#ffffff",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "https://olhatudorama-alt.github.io/bula/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://olhatudorama-alt.github.io/bula/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical"]
+}

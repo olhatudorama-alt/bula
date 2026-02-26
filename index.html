@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BulaFácil — Verificador de Medicamentos</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #f5f2ee;
+  --white: #ffffff;
+  --surface: #faf8f5;
+  --border: #e8e2d9;
+  --text: #1a1612;
+  --muted: #8a8078;
+  --accent: #c0392b;
+  --accent-soft: #fdf0ee;
+  --accent2: #2c7a4b;
+  --accent2-soft: #edf7f1;
+  --warning: #b7770d;
+  --warning-soft: #fef9ee;
+  --info: #1a5f8a;
+  --info-soft: #eef5fb;
+  --shadow: 0 2px 20px rgba(26,22,18,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,22,18,0.12);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 12px rgba(26,22,18,0.06);
+}
+
+.header-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-mark {
+  width: 42px; height: 42px;
+  background: var(--accent);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.logo-text h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.logo-text p {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+.disclaimer-badge {
+  margin-left: auto;
+  background: var(--warning-soft);
+  border: 1px solid #f0d080;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.7rem;
+  color: var(--warning);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── MAIN ── */
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.hero h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.4rem;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.hero h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.card-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── MEDS INPUT ── */
+.meds-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.med-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  animation: fadeUp 0.3s ease both;
+}
+
+.med-input-wrap {
+  flex: 1;
+  position: relative;
+}
+
+.med-input {
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.med-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.08);
+  background: var(--white);
+}
+
+.med-input::placeholder { color: var(--muted); }
+
+.med-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-remove {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-remove:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+.btn-add {
+  width: 100%;
+  padding: 11px;
+  background: transparent;
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.btn-add:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* ── OPÇÕES ── */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.option-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.option-check:hover { border-color: var(--accent); background: var(--accent-soft); }
+.option-check.checked { border-color: var(--accent); background: var(--accent-soft); }
+
+.option-check input { display: none; }
+
+.check-box {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-size: 0.7rem;
+  color: transparent;
+}
+
+.option-check.checked .check-box {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.option-label { font-size: 0.83rem; color: var(--text); font-weight: 500; line-height: 1.3; }
+.option-icon { font-size: 1rem; flex-shrink: 0; }
+
+/* ── PERFIL ── */
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.perfil-btn {
+  padding: 10px 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  font-weight: 500;
+}
+
+.perfil-btn:hover { border-color: var(--info); color: var(--info); background: var(--info-soft); }
+.perfil-btn.active { border-color: var(--info); color: var(--info); background: var(--info-soft); font-weight: 600; }
+
+/* ── BOTÃO PRINCIPAL ── */
+.btn-analisar {
+  width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  letter-spacing: 0.3px;
+  margin-top: 20px;
+}
+
+.btn-analisar:hover { background: #a93226; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(192,57,43,0.3); }
+.btn-analisar:active { transform: translateY(0); }
+.btn-analisar:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── LOADING ── */
+.loading-wrap {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeUp 0.3s ease both;
+}
+
+.loading-wrap.visible { display: block; }
+
+.pulse-ring {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-wrap p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.loading-steps {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.load-step {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: all 0.3s;
+}
+
+.load-step.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── RESULTADO ── */
+.result-wrap {
+  display: none;
+  animation: fadeUp 0.4s ease both;
+}
+
+.result-wrap.visible { display: block; }
+
+/* Nível de risco */
+.risk-banner {
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.risk-banner.safe { background: var(--accent2-soft); border: 1.5px solid #a8d5b8; }
+.risk-banner.warning { background: var(--warning-soft); border: 1.5px solid #f0d080; }
+.risk-banner.danger { background: var(--accent-soft); border: 1.5px solid #f5b8b2; }
+
+.risk-icon { font-size: 2rem; flex-shrink: 0; }
+
+.risk-text h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.risk-banner.safe .risk-text h3 { color: var(--accent2); }
+.risk-banner.warning .risk-text h3 { color: var(--warning); }
+.risk-banner.danger .risk-text h3 { color: var(--accent); }
+
+.risk-text p { font-size: 0.87rem; color: var(--muted); }
+
+/* Seções de resultado */
+.result-section {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.result-section-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.result-section-header:hover { background: var(--surface); }
+
+.section-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.section-icon.red { background: var(--accent-soft); }
+.section-icon.green { background: var(--accent2-soft); }
+.section-icon.yellow { background: var(--warning-soft); }
+.section-icon.blue { background: var(--info-soft); }
+
+.section-title { font-weight: 600; font-size: 0.95rem; flex: 1; }
+.section-arrow { color: var(--muted); font-size: 0.8rem; transition: transform 0.2s; }
+.result-section.open .section-arrow { transform: rotate(180deg); }
+
+.result-section-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.result-section.open .result-section-body { display: block; }
+
+.result-content {
+  padding-top: 16px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.result-content h4 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  margin: 16px 0 6px;
+  color: var(--text);
+}
+
+.result-content h4:first-child { margin-top: 0; }
+
+.result-content ul {
+  padding-left: 20px;
+  margin: 6px 0;
+}
+
+.result-content li { margin-bottom: 4px; }
+
+.result-content strong { color: var(--accent); }
+
+.tag-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 2px;
+}
+
+.tag-pill.red { background: var(--accent-soft); color: var(--accent); }
+.tag-pill.green { background: var(--accent2-soft); color: var(--accent2); }
+.tag-pill.yellow { background: var(--warning-soft); color: var(--warning); }
+.tag-pill.blue { background: var(--info-soft); color: var(--info); }
+
+/* Botão nova consulta */
+.btn-nova {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.btn-nova:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  border-top: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+/* ── ANIMAÇÕES ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVO ── */
+@media (max-width: 600px) {
+  .options-grid { grid-template-columns: 1fr; }
+  .perfil-grid { grid-template-columns: 1fr 1fr; }
+  .hero h2 { font-size: 1.8rem; }
+  .disclaimer-badge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-mark">💊</div>
+    <div class="logo-text">
+      <h1>BulaFácil</h1>
+      <p>Verificador de Medicamentos</p>
+    </div>
+    <div class="disclaimer-badge">⚠️ Não substitui médico</div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h2>Seus remédios são<br><em>seguros juntos?</em></h2>
+    <p>Verifique interações, entenda para que servem e saiba se são seguros para seu perfil.</p>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div class="card" id="form-card" style="animation-delay:0.1s">
+    <div class="card-title">💊 Medicamentos</div>
+
+    <div class="meds-list" id="meds-list">
+      <div class="med-row">
+        <div class="med-num">1</div>
+        <div class="med-input-wrap">
+          <input class="med-input" type="text" placeholder="Ex: Losartana 50mg" autocomplete="off">
+        </div>
+      </div>
+      <div class="med-row">
+        <div class="med-num">2</div>
+        <div class="med-input-wrap">
+          <input class="med-input" type="text" placeholder="Ex: Metformina 850mg" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add" onclick="addMed()">＋ Adicionar outro medicamento</button>
+  </div>
+
+  <div class="card" style="animation-delay:0.2s">
+    <div class="card-title">🔍 O que verificar</div>
+    <div class="options-grid" id="options-grid">
+      <label class="option-check checked" onclick="toggleOption(this)">
+        <input type="checkbox" checked>
+        <div class="check-box">✓</div>
+        <span class="option-icon">⚡</span>
+        <span class="option-label">Interações entre medicamentos</span>
+      </label>
+      <label class="option-check checked" onclick="toggleOption(this)">
+        <input type="checkbox" checked>
+        <div class="check-box">✓</div>
+        <span class="option-icon">📖</span>
+        <span class="option-label">Para que serve cada remédio</span>
+      </label>
+      <label class="option-check checked" onclick="toggleOption(this)">
+        <input type="checkbox" checked>
+        <div class="check-box">✓</div>
+        <span class="option-icon">🕐</span>
+        <span class="option-label">Horários e como tomar</span>
+      </label>
+      <label class="option-check checked" onclick="toggleOption(this)">
+        <input type="checkbox" checked>
+        <div class="check-box">✓</div>
+        <span class="option-icon">👤</span>
+        <span class="option-label">Segurança por perfil</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card" style="animation-delay:0.3s">
+    <div class="card-title">👤 Perfil do paciente</div>
+    <div class="perfil-grid" id="perfil-grid">
+      <button class="perfil-btn active" onclick="setPerfil(this, 'adulto')">👨 Adulto</button>
+      <button class="perfil-btn" onclick="setPerfil(this, 'idoso')">👴 Idoso (60+)</button>
+      <button class="perfil-btn" onclick="setPerfil(this, 'gestante')">🤰 Gestante</button>
+      <button class="perfil-btn" onclick="setPerfil(this, 'crianca')">👶 Criança</button>
+      <button class="perfil-btn" onclick="setPerfil(this, 'amamentando')">🍼 Amamentando</button>
+      <button class="perfil-btn" onclick="setPerfil(this, 'nao informado')">❓ Não informar</button>
+    </div>
+  </div>
+
+  <button class="btn-analisar" id="btn-analisar" onclick="analisar()">
+    🔬 Analisar Medicamentos
+  </button>
+
+  <!-- LOADING -->
+  <div class="loading-wrap" id="loading">
+    <div class="pulse-ring"></div>
+    <p>Consultando base de dados médica...</p>
+    <div class="loading-steps">
+      <div class="load-step active" id="step1">Identificando medicamentos</div>
+      <div class="load-step" id="step2">Verificando interações</div>
+      <div class="load-step" id="step3">Analisando perfil</div>
+      <div class="load-step" id="step4">Preparando relatório</div>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="result-wrap" id="result-wrap">
+    <div id="risk-banner"></div>
+    <div id="result-sections"></div>
+    <button class="btn-nova" onclick="novaConsulta()">↩ Nova consulta</button>
+  </div>
+
+</main>
+
+<footer>
+  <strong>BulaFácil</strong> — Ferramenta educativa e informativa.<br>
+  As informações fornecidas <strong>não substituem</strong> a consulta com médico ou farmacêutico.<br>
+  Em caso de dúvidas, consulte sempre um profissional de saúde.
+</footer>
+
+<script>
+let perfilAtual = 'adulto';
+let medCount = 2;
+
+// ── Adicionar medicamento ──────────────────────────────────────────
+function addMed() {
+  medCount++;
+  const list = document.getElementById('meds-list');
+  const row = document.createElement('div');
+  row.className = 'med-row';
+  row.innerHTML = `
+    <div class="med-num">${medCount}</div>
+    <div class="med-input-wrap">
+      <input class="med-input" type="text" placeholder="Nome do medicamento" autocomplete="off">
+    </div>
+    <button class="btn-remove" onclick="removeMed(this)" title="Remover">×</button>
+  `;
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function removeMed(btn) {
+  btn.closest('.med-row').remove();
+  // Renumerar
+  document.querySelectorAll('.med-row').forEach((row, i) => {
+    const num = row.querySelector('.med-num');
+    if (num) num.textContent = i + 1;
+  });
+  medCount = document.querySelectorAll('.med-row').length;
+}
+
+// ── Toggle opções ─────────────────────────────────────────────────
+function toggleOption(label) {
+  label.classList.toggle('checked');
+  const cb = label.querySelector('input');
+  cb.checked = !cb.checked;
+}
+
+// ── Perfil ────────────────────────────────────────────────────────
+function setPerfil(btn, perfil) {
+  document.querySelectorAll('.perfil-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  perfilAtual = perfil;
+}
+
+// ── Seções colapsáveis ────────────────────────────────────────────
+function toggleSection(el) {
+  el.closest('.result-section').classList.toggle('open');
+}
+
+// ── Loading steps ─────────────────────────────────────────────────
+let stepTimer;
+function animateSteps() {
+  const steps = ['step1','step2','step3','step4'];
+  let i = 0;
+  stepTimer = setInterval(() => {
+    steps.forEach(s => document.getElementById(s).classList.remove('active'));
+    if (i < steps.length) {
+      document.getElementById(steps[i]).classList.add('active');
+      i++;
+    }
+  }, 1800);
+}
+
+// ── Analisar ──────────────────────────────────────────────────────
+async function analisar() {
+  const inputs = document.querySelectorAll('.med-input');
+  const meds = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+
+  if (meds.length < 1) {
+    alert('Por favor, informe ao menos um medicamento.');
+    return;
+  }
+
+  // Opções selecionadas
+  const opcoes = [];
+  document.querySelectorAll('.option-check.checked .option-label').forEach(el => {
+    opcoes.push(el.textContent.trim());
+  });
+
+  // UI
+  document.getElementById('form-card').style.display = 'none';
+  document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+  document.getElementById('btn-analisar').style.display = 'none';
+  document.getElementById('result-wrap').classList.remove('visible');
+
+  const loading = document.getElementById('loading');
+  loading.classList.add('visible');
+  animateSteps();
+
+  // Prompt
+  const prompt = `Você é um farmacêutico clínico experiente. Analise os seguintes medicamentos para um paciente com perfil: ${perfilAtual}.
+
+Medicamentos: ${meds.join(', ')}
+
+Tarefas solicitadas: ${opcoes.join(', ')}
+
+Responda SOMENTE em JSON válido, sem texto fora do JSON, no seguinte formato exato:
+{
+  "nivel_risco": "seguro" | "atencao" | "perigo",
+  "resumo_risco": "frase curta explicando o nível geral",
+  "interacoes": [
+    {
+      "medicamentos": ["med1", "med2"],
+      "gravidade": "leve" | "moderada" | "grave",
+      "descricao": "explicação clara em português simples",
+      "recomendacao": "o que fazer"
+    }
+  ],
+  "sobre_cada_um": [
+    {
+      "nome": "nome do medicamento",
+      "para_que_serve": "explicação simples",
+      "classe": "classe farmacológica",
+      "efeitos_comuns": ["efeito1", "efeito2"]
+    }
+  ],
+  "como_tomar": [
+    {
+      "nome": "nome do medicamento",
+      "orientacoes": "horário, com/sem comida, intervalo, duração típica"
+    }
+  ],
+  "seguranca_perfil": {
+    "perfil": "${perfilAtual}",
+    "avaliacoes": [
+      {
+        "nome": "nome do medicamento",
+        "status": "seguro" | "cautela" | "contraindicado" | "sem dados",
+        "observacao": "explicação específica para este perfil"
+      }
+    ],
+    "alerta_geral": "alerta geral para este perfil com estes medicamentos"
+  }
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content[0].text;
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+
+    clearInterval(stepTimer);
+    loading.classList.remove('visible');
+    renderResult(result);
+
+  } catch(e) {
+    clearInterval(stepTimer);
+    loading.classList.remove('visible');
+    alert('Erro ao consultar. Verifique sua conexão e tente novamente.\n\n' + e.message);
+    novaConsulta();
+  }
+}
+
+// ── Renderizar resultado ──────────────────────────────────────────
+function renderResult(r) {
+  // Banner de risco
+  const bannerMap = {
+    seguro:  { cls: 'safe',    icon: '✅', titulo: 'Sem interações graves identificadas' },
+    atencao: { cls: 'warning', icon: '⚠️', titulo: 'Atenção: existem interações a considerar' },
+    perigo:  { cls: 'danger',  icon: '🚨', titulo: 'Alerta: interações potencialmente graves' }
+  };
+  const b = bannerMap[r.nivel_risco] || bannerMap['atencao'];
+  document.getElementById('risk-banner').innerHTML = `
+    <div class="risk-banner ${b.cls}">
+      <div class="risk-icon">${b.icon}</div>
+      <div class="risk-text">
+        <h3>${b.titulo}</h3>
+        <p>${r.resumo_risco || ''}</p>
+      </div>
+    </div>
+  `;
+
+  let sections = '';
+
+  // ── Interações ──
+  if (r.interacoes && r.interacoes.length > 0) {
+    const gravMap = { leve: 'green', moderada: 'yellow', grave: 'red' };
+    let content = '';
+    r.interacoes.forEach(inter => {
+      const cor = gravMap[inter.gravidade] || 'blue';
+      content += `
+        <h4>${inter.medicamentos.join(' + ')} <span class="tag-pill ${cor}">${inter.gravidade}</span></h4>
+        <p>${inter.descricao}</p>
+        <p><strong>Recomendação:</strong> ${inter.recomendacao}</p>
+      `;
+    });
+    sections += makeSection('⚡', 'red', 'Interações Identificadas', content, true);
+  } else {
+    sections += makeSection('✅', 'green', 'Interações', '<p>Nenhuma interação relevante identificada entre os medicamentos informados.</p>', true);
+  }
+
+  // ── Sobre cada remédio ──
+  if (r.sobre_cada_um && r.sobre_cada_um.length > 0) {
+    let content = '';
+    r.sobre_cada_um.forEach(med => {
+      content += `
+        <h4>${med.nome} <span class="tag-pill blue">${med.classe || ''}</span></h4>
+        <p>${med.para_que_serve}</p>
+        ${med.efeitos_comuns && med.efeitos_comuns.length ? `<p><strong>Efeitos comuns:</strong> ${med.efeitos_comuns.join(', ')}</p>` : ''}
+      `;
+    });
+    sections += makeSection('📖', 'blue', 'Para que serve cada remédio', content);
+  }
+
+  // ── Como tomar ──
+  if (r.como_tomar && r.como_tomar.length > 0) {
+    let content = '';
+    r.como_tomar.forEach(med => {
+      content += `<h4>🕐 ${med.nome}</h4><p>${med.orientacoes}</p>`;
+    });
+    sections += makeSection('🕐', 'yellow', 'Como e quando tomar', content);
+  }
+
+  // ── Segurança por perfil ──
+  if (r.seguranca_perfil) {
+    const statusMap = {
+      seguro: { cor: 'green', icone: '✅' },
+      cautela: { cor: 'yellow', icone: '⚠️' },
+      contraindicado: { cor: 'red', icone: '🚫' },
+      'sem dados': { cor: 'blue', icone: 'ℹ️' }
+    };
+    let content = '';
+    if (r.seguranca_perfil.alerta_geral) {
+      content += `<p style="margin-bottom:12px">${r.seguranca_perfil.alerta_geral}</p>`;
+    }
+    (r.seguranca_perfil.avaliacoes || []).forEach(av => {
+      const s = statusMap[av.status] || statusMap['sem dados'];
+      content += `
+        <h4>${s.icone} ${av.nome} <span class="tag-pill ${s.cor}">${av.status}</span></h4>
+        <p>${av.observacao}</p>
+      `;
+    });
+    sections += makeSection('👤', 'green', `Segurança para: ${perfilAtual}`, content);
+  }
+
+  document.getElementById('result-sections').innerHTML = sections;
+
+  // Eventos de colapso
+  document.querySelectorAll('.result-section-header').forEach(h => {
+    h.addEventListener('click', () => h.closest('.result-section').classList.toggle('open'));
+  });
+
+  document.getElementById('result-wrap').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function makeSection(icon, color, title, content, open = false) {
+  return `
+    <div class="result-section ${open ? 'open' : ''}">
+      <div class="result-section-header">
+        <div class="section-icon ${color}">${icon}</div>
+        <span class="section-title">${title}</span>
+        <span class="section-arrow">▼</span>
+      </div>
+      <div class="result-section-body">
+        <div class="result-content">${content}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Nova consulta ─────────────────────────────────────────────────
+function novaConsulta() {
+  document.getElementById('result-wrap').classList.remove('visible');
+  document.querySelectorAll('.card').forEach(c => c.style.display = 'block');
+  document.getElementById('form-card').style.display = 'block';
+  document.getElementById('btn-analisar').style.display = 'flex';
+  document.querySelectorAll('.med-input').forEach(i => i.value = '');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script>
+</body>
+</html>
