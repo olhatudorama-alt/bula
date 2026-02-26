@@ -801,18 +801,14 @@ Responda SOMENTE em JSON válido, sem texto fora do JSON, no seguinte formato ex
 }`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://silent-field-82da.olhatudorama.workers.dev/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      body: JSON.stringify({ prompt })
     });
 
     const data = await res.json();
-    const raw = data.content[0].text;
+    const raw = data.text;
     const clean = raw.replace(/```json|```/g, '').trim();
     const result = JSON.parse(clean);
 
