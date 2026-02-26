@@ -1,4 +1,4 @@
-const CACHE = 'bulafacil-v1';
+const CACHE = 'bulafacil-v2';
 const ASSETS = ['/bula/', '/bula/index.html', '/bula/manifest.json', '/bula/icon-192.png', '/bula/icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -14,6 +14,10 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // Nunca intercepta chamadas de API externas
+  if (e.request.url.includes('workers.dev') || e.request.url.includes('googleapis')) {
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request))
   );
