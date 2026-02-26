@@ -808,9 +808,13 @@ Responda SOMENTE em JSON válido, sem texto fora do JSON, no seguinte formato ex
     });
 
     const data = await res.json();
+    if (data.error) throw new Error('Erro: ' + data.error);
+    if (!data.text) throw new Error('Resposta vazia. Tente novamente.');
     const raw = data.text;
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const result = JSON.parse(clean);
+    const clean = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+    const jsonMatch = clean.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Formato invalido na resposta.');
+    const result = JSON.parse(jsonMatch[0]);
 
     clearInterval(stepTimer);
     loading.classList.remove('visible');
