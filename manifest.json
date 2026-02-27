@@ -1,0 +1,17 @@
+{
+  "name": "BulaFácil",
+  "short_name": "BulaFácil",
+  "description": "Verifique se seus remédios podem ser tomados juntos. Funciona offline.",
+  "start_url": "/bula/index.html",
+  "scope": "/bula/",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#1a5276",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "icons": [
+    {"src":"https://olhatudorama-alt.github.io/bula/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"https://olhatudorama-alt.github.io/bula/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ],
+  "categories": ["health","medical"]
+}
